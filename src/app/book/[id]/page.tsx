@@ -3,7 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 // 다이나믹페이지일경우 404로 이동
-export const dynamicParams = false;
+// export const dynamicParams = false;
 
 // 강제로 스태틱페이지로 변경
 // ※id지정 안한페이지로 이동시 해당 페이지는 다이나믹페이지
@@ -17,9 +17,8 @@ export async function generateStaticParams(){
 	return books.map((book) => ({id: book.id.toString(),}))
 }
 
-export default async function Book({params}: {params:Promise<{id: string}>}) {
-	const detailParams = await params;
-	const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/${detailParams.id}`);
+async function BookDetail({bookId}:{bookId: string}) {
+	const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/${bookId}`);
 	if (!response.ok) {
 		if (response.status === 404) notFound();
 		return <div>에러</div>
@@ -40,3 +39,42 @@ export default async function Book({params}: {params:Promise<{id: string}>}) {
 		</div>
 	)
 }
+
+function ReviewEditor(){
+	async function createReviewAction() {
+		"use server";
+		console.log("aaaa")
+	}
+
+	return (
+		<div>
+			<form className="flex flex-col gap-1" action={createReviewAction}>
+				<input className="w-[100px] p-1 border border-gray-400" name="author" type="text" placeholder="유저" />
+				<input className="w-full p-1 border border-gray-400" name="content" type="text" placeholder="내용" />
+				<div className="text-right">
+					<button className="p-3 rounded-[5px] bg-blue-500 text-white" type="submit">등록</button>
+				</div>
+			</form>
+		</div>
+	);
+}
+
+export default async function Book({params}: {params: {id: string}}) {
+	const paramsId = await params.id;
+	return (
+		<div className="flex flex-col gap-[50px]">
+			<BookDetail bookId={paramsId} />
+			<ReviewEditor />
+		</div>
+	)
+}
+
+// export default async function Book(detailParams: { params: {id: string}}) {
+// 	const params = await detailParams.params;
+// 	return (
+// 		<div className="flex flex-col gap-[50px]">
+// 			<BookDetail bookId={params.id} />
+// 			<ReviewEditor />
+// 		</div>
+// 	)
+// }
