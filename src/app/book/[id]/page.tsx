@@ -1,6 +1,7 @@
 import { BookData } from "@/types";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { createReviewAction } from "@/actions/create-review.action";
 
 // 다이나믹페이지일경우 404로 이동
 // export const dynamicParams = false;
@@ -28,7 +29,7 @@ async function BookDetail({bookId}:{bookId: string}) {
 	return (
 		<div className="flex flex-col gap-[10px]">
 			<div className="h-[600px] flex justify-center items-center bg-no-repeat bg-cover relative before:content-[''] before:w-full before:h-full before:bg-[rgba(0,0,0,.5)] before:absolute before:left-0 before:top-0" style={{backgroundImage: `url('${book.coverImgUrl}')`}}>
-				<div className="w-[400px] relative [img]:h-auto">
+				<div className="w-[400px] relative [&_img]:!h-auto">
 					<Image src={book.coverImgUrl} alt={book.title} fill className="!relative" priority />
 				</div>
 			</div>
@@ -40,17 +41,13 @@ async function BookDetail({bookId}:{bookId: string}) {
 	)
 }
 
-function ReviewEditor(){
-	async function createReviewAction() {
-		"use server";
-		console.log("aaaa")
-	}
-
+function ReviewEditor({bookId}: {bookId: string}){
 	return (
 		<div>
 			<form className="flex flex-col gap-1" action={createReviewAction}>
-				<input className="w-[100px] p-1 border border-gray-400" name="author" type="text" placeholder="유저" />
-				<input className="w-full p-1 border border-gray-400" name="content" type="text" placeholder="내용" />
+				<input name="bookId" value={bookId} hidden readOnly />
+				<input className="w-[100px] p-1 border border-gray-400" name="author" type="text" placeholder="유저"  required/>
+				<textarea className="w-full p-1 border border-gray-400" name="content" placeholder="내용"  required/>
 				<div className="text-right">
 					<button className="p-3 rounded-[5px] bg-blue-500 text-white" type="submit">등록</button>
 				</div>
@@ -64,7 +61,7 @@ export default async function Book({params}: {params: {id: string}}) {
 	return (
 		<div className="flex flex-col gap-[50px]">
 			<BookDetail bookId={paramsId} />
-			<ReviewEditor />
+			<ReviewEditor bookId={paramsId} />
 		</div>
 	)
 }
