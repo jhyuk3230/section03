@@ -22,7 +22,7 @@ async function SearchResult({ q }: {q: string}) {
 	)
 }
 
-export default async function Search({ searchParams }: {searchParams: {q?: string}}) {
+export default async function Search({ searchParams }: {searchParams: Promise<{q?: string}>}) {
 	const params = await searchParams;
 
 	return (

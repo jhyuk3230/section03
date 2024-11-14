@@ -1,7 +1,8 @@
-import { BookData } from "@/types";
+import { BookData, ReviewData } from "@/types";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { createReviewAction } from "@/actions/create-review.action";
+import ReviewItem from "@/component/review-item";
+import ReviewEditor from "@/component/review-editor";
 
 // 다이나믹페이지일경우 404로 이동
 // export const dynamicParams = false;
@@ -19,7 +20,7 @@ export async function generateStaticParams(){
 }
 
 async function BookDetail({bookId}:{bookId: string}) {
-	const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/${bookId}`);
+	const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/${bookId}`, {cache: "force-cache"});
 	if (!response.ok) {
 		if (response.status === 404) notFound();
 		return <div>에러</div>
@@ -41,27 +42,27 @@ async function BookDetail({bookId}:{bookId: string}) {
 	)
 }
 
-function ReviewEditor({bookId}: {bookId: string}){
+async function ReviewList({bookId}: {bookId: string}){
+	const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_URL}/review/book/${bookId}`, {next: {tags: [`review-${bookId}`]}});
+
+	if (!response.ok) throw new Error(`Review fetch failed : ${response.statusText}`);
+
+	const reviews: ReviewData[] = await response.json();
+
 	return (
-		<div>
-			<form className="flex flex-col gap-1" action={createReviewAction}>
-				<input name="bookId" value={bookId} hidden readOnly />
-				<input className="w-[100px] p-1 border border-gray-400" name="author" type="text" placeholder="유저"  required/>
-				<textarea className="w-full p-1 border border-gray-400" name="content" placeholder="내용"  required/>
-				<div className="text-right">
-					<button className="p-3 rounded-[5px] bg-blue-500 text-white" type="submit">등록</button>
-				</div>
-			</form>
-		</div>
-	);
+		<ul className="border-t border-t-black">
+			{reviews.map((review) => (<ReviewItem key={`review-item-${review.id}`} {...review} />))}
+		</ul>
+	)
 }
 
-export default async function Book({params}: {params: {id: string}}) {
-	const paramsId = await params.id;
+export default async function Book({params}: {params: Promise<{id: string}>}) {
+	const paramsId = await params;
 	return (
 		<div className="flex flex-col gap-[50px]">
-			<BookDetail bookId={paramsId} />
-			<ReviewEditor bookId={paramsId} />
+			<BookDetail bookId={paramsId.id} />
+			<ReviewEditor bookId={paramsId.id} />
+			<ReviewList bookId={paramsId.id} />
 		</div>
 	)
 }
