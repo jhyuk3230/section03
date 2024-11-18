@@ -2,6 +2,7 @@ import BookItem from "@/component/book-item";
 import BookListSkeleton from "@/component/skeleton/book-list-skeleton";
 import { BookData } from "@/types";
 import { delay } from "@/utill/delay";
+import { Metadata } from "next";
 import { Suspense } from "react";
 
 // 특정 페이지의 유형을 강제로 Static, Dynamic 페이지로 설정
@@ -13,7 +14,7 @@ import { Suspense } from "react";
 // export const dynamic = 'auto';
 
 async function AllBooks(){
-	await delay(1500);
+	// await delay(1500);
 	const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_URL}/book`, {cache:"force-cache"});
 	if (!response.ok) return <div>오류가 발생했습니다</div>;
 	const allBooks: BookData[] = await response.json();
@@ -26,7 +27,7 @@ async function AllBooks(){
 }
 
 async function RecoBooks(){
-	await delay(3000);
+	// await delay(3000);
 	const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/random`, {next: {revalidate: 3}});
 	if (!response.ok) return <div>오류가 발생했습니다</div>;
 	const recoBooks: BookData[] = await response.json();
@@ -39,6 +40,16 @@ async function RecoBooks(){
 }
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+	title: "한입 북스",
+	description: "한입 북스에 등록된 도서를 만나보세요",
+	openGraph: {
+		title: "한입 북스",
+		description: "한입 북스에 등록된 도서를 만나보세요",
+		images: ["/thumbnail.png"],
+	}
+};
 
 export default async function Page() {
 	return(

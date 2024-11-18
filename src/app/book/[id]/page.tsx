@@ -30,7 +30,7 @@ async function BookDetail({bookId}:{bookId: string}) {
 	return (
 		<div className="flex flex-col gap-[10px]">
 			<div className="h-[600px] flex justify-center items-center bg-no-repeat bg-cover relative before:content-[''] before:w-full before:h-full before:bg-[rgba(0,0,0,.5)] before:absolute before:left-0 before:top-0" style={{backgroundImage: `url('${book.coverImgUrl}')`}}>
-				<div className="w-[400px] relative [&_img]:!h-auto">
+				<div className="w-[300px] relative [&_img]:!h-auto">
 					<Image src={book.coverImgUrl} alt={book.title} fill className="!relative" priority />
 				</div>
 			</div>

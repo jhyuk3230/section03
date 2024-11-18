@@ -1,6 +1,7 @@
 import Link from "next/link";
 import "./globals.css"
 import { BookData } from "@/types";
+import { ReactNode } from "react";
 
 async function Footer(){
 	const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_URL}/book`, {cache: "force-cache"});
@@ -20,8 +21,10 @@ async function Footer(){
 
 export default function RootLayout({
   children,
+	modal
 }: Readonly<{
   children: React.ReactNode;
+	modal: ReactNode;
 }>) {
   return (
     <html lang="en">
@@ -33,6 +36,8 @@ export default function RootLayout({
         	{children}
 				</main>
 				<Footer />
+				{modal}
+				<div id="modal-root"></div>
       </body>
     </html>
   );
