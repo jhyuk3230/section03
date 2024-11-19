@@ -1,7 +1,6 @@
 import BookItem from "@/component/book-item";
 import BookListSkeleton from "@/component/skeleton/book-list-skeleton";
 import { BookData } from "@/types";
-import { delay } from "@/utill/delay";
 import { Metadata } from "next";
 import { Suspense } from "react";
 

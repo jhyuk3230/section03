@@ -16,7 +16,19 @@ export default function Modal({children}: {children:ReactNode}) {
 	}, []);
 
 	return (
-		// createPortal(<div>{children}</div>, document.querySelector("#modal-root") as HTMLElement)
-		createPortal(<dialog className="w-[90%] max-w-[700px] mt-5 p-5 border-none rounded-[5px] backdrop:bg-black/70" onClose={() => router.back()} onClick={(e) => {if ((e.target as any).nodeName === 'DIALOG') router.back()}} ref={dialogRef}>{children}</dialog>, document.querySelector("#modal-root") as HTMLElement)
-	)
+    // createPortal(<div>{children}</div>, document.querySelector("#modal-root") as HTMLElement)
+    createPortal(
+      <dialog
+        className="w-[90%] max-w-[700px] mt-5 border-none rounded-[5px] backdrop:bg-black/70"
+        onClose={() => router.back()}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) router.back();
+        }}
+        ref={dialogRef}
+      >
+        <div className="p-5">{children}</div>
+      </dialog>,
+      document.querySelector("#modal-root") as HTMLElement
+    )
+  );
 }
