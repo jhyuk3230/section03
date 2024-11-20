@@ -1,4 +1,4 @@
-import { BookData, ReviewData } from "@/types";
+import { BookData, BookProps, ReviewData } from "@/types";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import ReviewItem from "@/component/review-item";
@@ -56,15 +56,15 @@ async function ReviewList({bookId}: {bookId: string}){
 	)
 }
 
-export default async function Book({params}: {params: Promise<{id: string}>}) {
-	const paramsId = await params;
-	return (
-		<div className="flex flex-col gap-[50px]">
-			<BookDetail bookId={paramsId.id} />
-			<ReviewEditor bookId={paramsId.id} />
-			<ReviewList bookId={paramsId.id} />
-		</div>
-	)
+export default async function Book({ params }: BookProps) {
+	const resolvedParams = await params;
+  return (
+    <div className="flex flex-col gap-[50px]">
+      <BookDetail bookId={resolvedParams.id} />
+      <ReviewEditor bookId={resolvedParams.id} />
+      <ReviewList bookId={resolvedParams.id} />
+    </div>
+  );
 }
 
 // export default async function Book(detailParams: { params: {id: string}}) {

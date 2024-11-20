@@ -15,3 +15,11 @@ export interface ReviewData {
 	createdAt: string;
 	bookId: number
 }
+
+export interface InterceptProps {
+  params: Promise<{ id: string }>;
+}
+
+export interface BookProps {
+  params: {id: string};
+};

@@ -7,7 +7,7 @@ export default function ReviewItemDeleteBtn({ reviewId, bookId }: {reviewId: num
 	const formRef = useRef<HTMLFormElement>(null);
 	const [state, formAction, isPending] = useActionState(deleteReviewAction, null)
 
-	console.log(formRef.current);
+	// console.log(formRef.current);
 
 	useEffect(()=>{
 		if (state && !state.status) alert(state.error);
